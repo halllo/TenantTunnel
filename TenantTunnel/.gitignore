@@ -10,4 +10,4 @@ pkg/
 node_modules
 logs/
 dist/
-STP.UserManagement/STP.UserManagementService/wwwroot/
+TenantTunnel/wwwroot/
