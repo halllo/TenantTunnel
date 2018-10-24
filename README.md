@@ -1,2 +1,2 @@
 # TenantTunnel
-GET requests to on-premise agents.
+Simply issue GET/POST requests to on-premise agents.

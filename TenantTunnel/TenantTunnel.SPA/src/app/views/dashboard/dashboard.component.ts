@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Api, UserDto, MessageDto, MessageRecipientDto, MessageSenderDto } from '../../services/api.service';
+import { Api } from '../../services/api.service';
 import { Auth } from '../../services/auth.service';
-import * as nacl from 'tweetnacl';
 import { asEnumerable } from 'linq-es2015';
+import { environment } from '../../../environments/environment';
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -11,13 +11,44 @@ import { asEnumerable } from 'linq-es2015';
 })
 export class DashboardComponent implements OnInit {
 
-  public user: UserDto;
+  access_token: string;
+  endpoint: string;
+  method: string;
+  argument: string;
+  responses: Response[] = [];
 
   constructor(private auth: Auth, public api: Api) {
   }
 
-  public ngOnInit(): void {
-    
+  ngOnInit(): void {
+    this.auth.acquireToken(environment.adalConfigApiEndpoint).subscribe(token => {
+      this.access_token = token;
+    }, err => {
+      console.error(err);
+      alert(err);
+    })
   }
 
+  async onSubmit(form) {
+    try {
+      const response = await this.api.requestThroughTunnel(this.endpoint, this.method, this.argument).toPromise();
+      this.responses.push(<Response> {
+        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}/?a=${this.argument}`,
+        received: new Date(),
+        body: response
+      })
+    } catch (err) {
+      this.responses.push(<Response> {
+        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}/?a=${this.argument}`,
+        received: new Date(),
+        body: err
+      })
+    }
+  }
+}
+
+class Response {
+  url: string;
+  received: Date;
+  body: object;
 }

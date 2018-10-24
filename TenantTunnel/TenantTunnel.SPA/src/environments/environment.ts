@@ -5,11 +5,11 @@
 
 export const environment = {
   production: false,
-
   backend_api: 'https://localhost:44303',
+  
   adalConfig: {
     tenant: 'common',
-    clientId: 'd5a2006e-48fa-44bb-b1c1-4fe3e57de967' // application id
+    clientId: '8dc5acea-27b9-4a50-b731-3d23d4c1a63b' // application id
   },
-  adalConfigApiEndpoint: 'a5cb06b7-a3ee-4263-8cf9-3985da161906', // application id of backend
+  adalConfigApiEndpoint: '9ce9c8ac-4c70-42f6-8738-1183899d4960', // application id of backend
 };
