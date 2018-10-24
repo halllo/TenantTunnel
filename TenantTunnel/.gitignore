@@ -1,0 +1,13 @@
+*.suo
+bin
+obj
+*.user
+.vs
+*.lock.json
+packages/
+pkg/
+.idea
+node_modules
+logs/
+dist/
+STP.UserManagement/STP.UserManagementService/wwwroot/
