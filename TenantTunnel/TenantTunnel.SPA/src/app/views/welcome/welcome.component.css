@@ -1,0 +1,26 @@
+main {
+  padding: 100px;
+  background-image: url('/assets/ja.jpg');
+  height: 100%; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+h1.display-3 {
+  color: white;
+}
+
+.container.login-area {
+    padding: 20px;
+}
+
+@media screen and (max-width: 600px) {
+  main {
+    padding: 20px;
+  }
+
+  h1.display-3 {
+    font-size: 3rem;
+  }
+}

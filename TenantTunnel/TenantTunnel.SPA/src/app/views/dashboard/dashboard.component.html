@@ -1,0 +1,16 @@
+<main role="main">
+
+  <div class="jumbotron">
+    <div *ngIf="api.loading" class="container">
+      <h2>loading...</h2>
+    </div>
+    <div *ngIf="user != null" class="container">
+      <h1 class="display-3">Hello {{user.name}}!</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Tunnel</h2>
+  </div>
+
+</main>
