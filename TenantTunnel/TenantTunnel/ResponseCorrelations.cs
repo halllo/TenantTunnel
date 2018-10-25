@@ -19,7 +19,7 @@ namespace TenantTunnel
 
 		private string Random()
 		{
-			var bytes = new byte[256];
+			var bytes = new byte[64];
 			rng.GetBytes(bytes);
 			return Convert.ToBase64String(bytes) + DateTime.Now.Ticks;
 		}

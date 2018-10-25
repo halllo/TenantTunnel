@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  backend_api: 'https://localhost:44303',
+  backend_api: 'https://localhost:44379',
   
   adalConfig: {
     tenant: 'common',

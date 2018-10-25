@@ -33,15 +33,16 @@ export class DashboardComponent implements OnInit {
     try {
       const response = await this.api.requestThroughTunnel(this.endpoint, this.method, this.argument).toPromise();
       this.responses.push(<Response> {
-        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}/?a=${this.argument}`,
+        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}?a=${this.argument}`,
         received: new Date(),
         body: response
       })
     } catch (err) {
       this.responses.push(<Response> {
-        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}/?a=${this.argument}`,
+        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}?a=${this.argument}`,
         received: new Date(),
-        body: err
+        body: err,
+        error: true
       })
     }
   }
@@ -51,4 +52,5 @@ class Response {
   url: string;
   received: Date;
   body: object;
+  error: boolean;
 }

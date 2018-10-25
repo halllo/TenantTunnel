@@ -4,6 +4,9 @@
     <div *ngIf="api.loading" class="container">
       <h2>loading...</h2>
     </div>
+    <div *ngIf="access_token == null" class="container">
+      <p>getting access token...</p>
+    </div>
     <div *ngIf="access_token != null" class="container">
       <h1 class="display-3">Hello!</h1>
       <p>
@@ -14,7 +17,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div *ngIf="access_token != null" class="container">
     <h2>Request</h2>
     <form #tunnelRequestForm="ngForm" (ngSubmit)="onSubmit(tunnelRequestForm.form)">
       <div class="form-group">
@@ -29,14 +32,14 @@
         <label for="argument">argument</label>
         <input type="text" class="form-control" id="argument" required [(ngModel)]="argument" name="argument">
       </div>
-      <button type="submit" class="btn btn-success" [disabled]="!tunnelRequestForm.form.valid">request</button>
+      <button type="submit" class="btn btn-success" [disabled]="!tunnelRequestForm.form.valid || api.loading">request</button>
     
     </form>
   </div>
 
-  <div class="container mt-5">
+  <div *ngIf="access_token != null" class="container mt-5">
     <h2>Responses</h2>
-    <div class="card" *ngFor="let response of responses">
+    <div [ngClass]="{'card': true, 'bg-danger': response.error}" *ngFor="let response of responses">
       <h5 class="card-header">
         <a href="{{response.url}}" target="blank">{{response.url}}</a>&nbsp;<span class="small text-muted">{{response.received}}</span>
       </h5>

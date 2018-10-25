@@ -15,10 +15,10 @@ namespace TenantTunnel
 			this.handlers = new Dictionary<string, Tuple<Func<string, Task<string>>, Action>>();
 		}
 
-		public static async Task<TenantTunnelLight> Aim(string at, Func<Task<string>> accessToken = null)
+		public static async Task<TenantTunnelLight> For(string endpoint, Func<Task<string>> accessToken = null, Action<Exception> closed = null)
 		{
 			var connection = new HubConnectionBuilder()
-				.WithUrl(at, opt =>
+				.WithUrl(TenantTunnelLightAim.Url + "?endpoint=" + endpoint, opt =>
 				{
 					if (accessToken != null)
 					{
@@ -45,9 +45,13 @@ namespace TenantTunnel
 			async void Respond(string correlationId, Task<string> resultTask, Action responded)
 			{
 				var result = await resultTask;
-				await Task.Delay(5000);
 				await connection.InvokeAsync("Respond", correlationId, result);
 				responded?.Invoke();
+			}
+
+			if (closed != null)
+			{
+				connection.Closed += async exception => closed?.Invoke(exception);
 			}
 
 			await connection.StartAsync();
@@ -63,5 +67,10 @@ namespace TenantTunnel
 		{
 			await connection.StopAsync();
 		}
+	}
+
+	public static class TenantTunnelLightAim
+	{
+		public static string Url = "https://localhost:44379/hubs/tunnel";
 	}
 }
