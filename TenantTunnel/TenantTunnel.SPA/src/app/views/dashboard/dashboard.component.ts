@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
     }, err => {
       console.error(err);
       alert(err);
-    })
+    });
   }
 
   async onSubmit(form) {

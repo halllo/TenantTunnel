@@ -71,6 +71,6 @@ namespace TenantTunnel
 
 	public static class TenantTunnelLightAim
 	{
-		public static string Url = "https://localhost:44379/hubs/tunnel";
+		public static string Url = "https://tenanttunnel.azurewebsites.net/hubs/tunnel";
 	}
 }

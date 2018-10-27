@@ -50,9 +50,10 @@ namespace TenantTunnel
 		{
 			if (this.CorrelationsIds.ContainsKey(correlationId))
 			{
-				var taskCompletionSource = this.CorrelationsIds[correlationId];
-				taskCompletionSource.SetResult(result);
-				this.CorrelationsIds.TryRemove(correlationId, out TaskCompletionSource<string> removed);
+				if (this.CorrelationsIds.TryRemove(correlationId, out TaskCompletionSource<string> taskCompletionSource))
+				{
+					taskCompletionSource.SetResult(result);
+				}
 			}
 		}
 	}

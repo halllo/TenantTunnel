@@ -40,12 +40,17 @@ export class Auth {
     return this.user != null;
   }
 
-  public acquireToken(audience: string): Observable<string> {
+  public acquireToken(resource: string): Observable<string> {
     const subject = new ReplaySubject<string>();
     const observable = subject.asObservable();
-    this.context.acquireToken(audience, (er, token: string) => {
+    this.context.acquireToken(resource, (er, token: string) => {
       if (er) {
+        if (typeof er === 'string' && er.startsWith('AADSTS65001: The user or administrator has not consented')) {
+          console.warn('starting redirect for interactive auth...', er);
+          this.context.acquireTokenRedirect(resource);
+        } else { 
           subject.error(er);
+        }
       } else {
           subject.next(token);
           subject.complete();

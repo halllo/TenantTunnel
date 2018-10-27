@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  backend_api: 'https://lexolutioneverythingencrypted-api.azurewebsites.net',
+  backend_api: 'https://tenanttunnel.azurewebsites.net',
 
   adalConfig: {
     tenant: 'common',
