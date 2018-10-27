@@ -4,9 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
 
 		<PackageId>TenantTunnel</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>Manuel Naujoks</Authors>
 		<Company>Manuel Naujoks</Company>
+		<PackageProjectUrl>https://github.com/halllo/TenantTunnel</PackageProjectUrl>
 		<Description>TenantTunnel lets you issue GET/POST requests to on-premise agents. This library is used to build such an on-premise agent.</Description>
 		
   </PropertyGroup>
