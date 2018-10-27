@@ -12,12 +12,12 @@ namespace TenantTunnel
 	public class TunnelController : ControllerBase
 	{
 		private readonly ResponseCorrelations responseCorrelations;
-		private readonly IHubContext<TunnelHub> tunnelHub;
+		private readonly Endpoints endpoints;
 
-		public TunnelController(ResponseCorrelations responseCorrelations, IHubContext<TunnelHub> tunnelHub)
+		public TunnelController(ResponseCorrelations responseCorrelations, Endpoints endpoints)
 		{
 			this.responseCorrelations = responseCorrelations;
-			this.tunnelHub = tunnelHub;
+			this.endpoints = endpoints;
 		}
 
 		[Route("api/tunnel/{endpoint}/{method}")]
@@ -43,8 +43,13 @@ namespace TenantTunnel
 
 		private async Task<ActionResult> Request(string endpoint, string method, string argument)
 		{
+			var tenantId = this.HttpContext.User.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
+			var clients = await this.endpoints.Proxy(tenantId, endpoint);
+
 			var response = this.responseCorrelations.Response(out string correlationId);
-			await this.tunnelHub.Clients.All.SendAsync("Request", method, correlationId, argument);
+			var request = clients.SendAsync("Request", method, correlationId, argument);
+
+			await request;
 
 			try
 			{

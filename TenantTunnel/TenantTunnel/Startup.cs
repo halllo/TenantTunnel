@@ -26,6 +26,7 @@ namespace TenantTunnel
 			services.Auth(Configuration);
 			services.AddSignalR();
 			services.AddSingleton<ResponseCorrelations>();
+			services.AddSingleton<Endpoints>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)

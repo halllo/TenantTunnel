@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
@@ -14,11 +15,12 @@ namespace OnPremiseAgent
 			try
 			{
 				Log("starting...", ConsoleColor.DarkGray);
+				var login = new AsyncLazy<AuthenticationResult>(() => AcquireAccessToken());
 
 				TenantTunnelLightAim.Url = "https://localhost:44379/hubs/tunnel";
 				var tunnelLight = await TenantTunnelLight.For(
 					endpoint: "OnPremiseAgent",
-					accessToken: async () => await AcquireAccessToken(),
+					accessToken: async () => (await login).AccessToken,
 					closed: exception => Log(exception.ToString(), ConsoleColor.Red));
 
 				tunnelLight.On("random1-100", async message =>
@@ -31,6 +33,8 @@ namespace OnPremiseAgent
 				}, responded: () => Log("Gesendet."));
 
 				Log("started", ConsoleColor.DarkGray);
+				Log($"OnPremiseAgent@{(await login).TenantId}.random1-100", ConsoleColor.Magenta);
+
 				Console.ReadLine();
 
 				await tunnelLight.Off();
@@ -43,19 +47,20 @@ namespace OnPremiseAgent
 		}
 
 
-		private static async Task<string> AcquireAccessToken()
+		private static async Task<AuthenticationResult> AcquireAccessToken()
 		{
-			var authority = "https://login.windows.net/74a15b6f-bbcc-4e59-b372-6ec940a12bf3";
-			var clientID = "31ee10a2-6d71-43e6-b3ea-5ab2b0b89d0a";
-			var rediretUri = new Uri("https://tenanttunnellight_manuels_pc");
+			var authority = ConfigurationManager.AppSettings["Authority"];
+			var clientID = ConfigurationManager.AppSettings["ClientID"];
+			var redirectUri = new Uri(ConfigurationManager.AppSettings["RedirectUri"]);
 			var resource = "9ce9c8ac-4c70-42f6-8738-1183899d4960";
 
 			Log("getting access token...");
 			var authenticationContext = new AuthenticationContext(authority, false);
-			var authenticationResult = await authenticationContext.AcquireTokenAsync(resource, clientID, rediretUri, new PlatformParameters(PromptBehavior.Auto));
+			var authenticationResult = await authenticationContext.AcquireTokenAsync(resource, clientID, redirectUri, new PlatformParameters(PromptBehavior.Auto));
+
 			Log(new string(authenticationResult.AccessToken.Take(100).ToArray()) + "...", ConsoleColor.Green);
 
-			return authenticationResult.AccessToken;
+			return authenticationResult;
 		}
 
 

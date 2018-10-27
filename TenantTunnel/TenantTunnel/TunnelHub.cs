@@ -9,10 +9,12 @@ namespace TenantTunnel
 	public class TunnelHub : Hub
 	{
 		private readonly ResponseCorrelations responseCorrelations;
+		private readonly Endpoints endpoints;
 
-		public TunnelHub(ResponseCorrelations responseCorrelations)
+		public TunnelHub(ResponseCorrelations responseCorrelations, Endpoints endpoints)
 		{
 			this.responseCorrelations = responseCorrelations;
+			this.endpoints = endpoints;
 		}
 
 		public override async Task OnConnectedAsync()
@@ -20,6 +22,7 @@ namespace TenantTunnel
 			var httpContext = this.Context.GetHttpContext();
 			var endpoint = httpContext.Request.Query["endpoint"].ToString();
 			var tenantId = this.Context.User.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
+			await this.endpoints.Register(tenantId, endpoint, this.Context.ConnectionId, this.Groups);
 
 			await base.OnConnectedAsync();
 		}
@@ -29,6 +32,7 @@ namespace TenantTunnel
 			var httpContext = this.Context.GetHttpContext();
 			var endpoint = httpContext.Request.Query["endpoint"].ToString();
 			var tenantId = this.Context.User.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
+			await this.endpoints.Unregister(tenantId, endpoint, this.Context.ConnectionId);
 
 			await base.OnDisconnectedAsync(exception);
 		}
