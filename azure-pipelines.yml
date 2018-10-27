@@ -10,5 +10,30 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- script: npm install
+  workingDirectory: TenantTunnel/TenantTunnel.SPA
+  displayName: 'Install SPA dependencies'
+
+- script: npm run build
+  workingDirectory: TenantTunnel/TenantTunnel.SPA
+  displayName: 'Build SPA'
+  
+- task: DotNetCoreCLI@2
+  displayName: 'Build & Publish Backend'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+
+
+
+
+
+  
