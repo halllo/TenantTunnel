@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace TenantTunnel
 {
 	[ApiController]
-	[Authorize(Policy.TunnelRequest)]
+	[Authorize(Auth.Policy.TunnelRequest)]
 	public class TunnelController : ControllerBase
 	{
 		private readonly ResponseCorrelations responseCorrelations;

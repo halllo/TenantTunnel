@@ -14,26 +14,28 @@ namespace OnPremiseAgent
 		{
 			try
 			{
+				var endpoint = "OnPremiseAgent";
+				var method = "random1-100";
+
 				Log("starting...", ConsoleColor.DarkGray);
 				var login = new AsyncLazy<AuthenticationResult>(() => AcquireAccessToken());
 
-				TenantTunnelLightAim.Url = "https://localhost:44379/hubs/tunnel";
-				var tunnelLight = await TenantTunnelLight.For(
-					endpoint: "OnPremiseAgent",
+				//LightAim.Url = "https://localhost:44379/hubs/tunnel";
+				var tunnelLight = await Light.For(
+					endpoint: endpoint,
 					accessToken: async () => (await login).AccessToken,
-					closed: exception => Log(exception.ToString(), ConsoleColor.Red));
+					closed: exception => Log(exception?.ToString() ?? "closed without exception", ConsoleColor.Red));
 
-				tunnelLight.On("random1-100", async message =>
+				tunnelLight.On(method, async message =>
 				{
-					Log($"random1-100: {message}", ConsoleColor.Cyan);
+					Log($"{method}: {message}", ConsoleColor.Cyan);
 					var response = new Random().Next(1, 100).ToString();
-					Log("Bitte Antwort eingeben: " + response);
-					//await Task.Delay(1000);
+					Log("response: " + response);
 					return response;
-				}, responded: () => Log("Gesendet."));
+				}, responded: () => Log("sent"));
 
 				Log("started", ConsoleColor.DarkGray);
-				Log($"OnPremiseAgent@{(await login).TenantId}.random1-100", ConsoleColor.Magenta);
+				Log($"{endpoint}@{(await login).TenantId ?? (await login).Authority.Replace("https://login.windows.net/", "").Replace("/", "")}.{method}", ConsoleColor.Magenta);
 
 				Console.ReadLine();
 

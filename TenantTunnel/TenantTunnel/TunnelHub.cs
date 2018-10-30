@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace TenantTunnel
 {
-	[Authorize(Policy.TunnelRespond)]
+	[Authorize(Auth.Policy.TunnelRespond)]
 	public class TunnelHub : Hub
 	{
 		private readonly ResponseCorrelations responseCorrelations;

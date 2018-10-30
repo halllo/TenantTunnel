@@ -5,20 +5,20 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace TenantTunnel
 {
-	public class TenantTunnelLight
+	public class Light
 	{
 		readonly HubConnection connection;
 		readonly Dictionary<string, Tuple<Func<string, Task<string>>, Action>> handlers;
-		private TenantTunnelLight(HubConnection connection)
+		private Light(HubConnection connection)
 		{
 			this.connection = connection;
 			this.handlers = new Dictionary<string, Tuple<Func<string, Task<string>>, Action>>();
 		}
 
-		public static async Task<TenantTunnelLight> For(string endpoint, Func<Task<string>> accessToken = null, Action<Exception> closed = null)
+		public static async Task<Light> For(string endpoint, Func<Task<string>> accessToken = null, Action<Exception> closed = null)
 		{
 			var connection = new HubConnectionBuilder()
-				.WithUrl(TenantTunnelLightAim.Url + "?endpoint=" + endpoint, opt =>
+				.WithUrl(LightAim.Url + "?endpoint=" + endpoint, opt =>
 				{
 					if (accessToken != null)
 					{
@@ -26,7 +26,7 @@ namespace TenantTunnel
 					}
 				})
 				.Build();
-			var tenantTunnelLight = new TenantTunnelLight(connection);
+			var tenantTunnelLight = new Light(connection);
 
 			connection.On("Request", new[] { typeof(string), typeof(string), typeof(string) }, async message =>
 			{
@@ -69,7 +69,7 @@ namespace TenantTunnel
 		}
 	}
 
-	public static class TenantTunnelLightAim
+	public static class LightAim
 	{
 		public static string Url = "https://tenanttunnel.azurewebsites.net/hubs/tunnel";
 	}
