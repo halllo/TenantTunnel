@@ -13,7 +13,7 @@ export class Api {
 
   constructor(private http: HttpClient, private auth: Auth) { }
 
-  public requestThroughTunnel(endpoint: string, method: string, argument: string): Observable<object> {
+  public requestThroughTunnel(endpoint: string, method: string, argument: string): Observable<string> {
     return of(0).pipe(
       tap(x => this.loading = true),
       mergeMap(x => this.auth.acquireToken(environment.adalConfigApiEndpoint)),
@@ -24,10 +24,11 @@ export class Api {
           {
             headers: new HttpHeaders({
               'Authorization': `Bearer ${token}`
-            })
+            }),
+            responseType: 'text'
           });
       }),
-      map(result => <object>result),
+      map(result => result),
       finalize(() => this.loading = false),
       share()
     );

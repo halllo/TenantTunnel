@@ -51,6 +51,6 @@ export class DashboardComponent implements OnInit {
 class Response {
   url: string;
   received: Date;
-  body: object;
+  body: string;
   error: boolean;
 }
