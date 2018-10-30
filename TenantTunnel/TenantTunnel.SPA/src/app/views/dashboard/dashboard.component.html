@@ -1,9 +1,6 @@
 <main role="main">
 
   <div class="jumbotron">
-    <div *ngIf="api.loading" class="container">
-      <h2>loading...</h2>
-    </div>
     <div *ngIf="access_token == null" class="container">
       <p>getting access token...</p>
     </div>
@@ -15,8 +12,11 @@
         <span>{{access_token}}</span>
       </p>
     </div>
+    <div *ngIf="api.loading" class="container">
+      <p><strong>loading...</strong></p>
+    </div>
   </div>
-
+  
   <div *ngIf="access_token != null" class="container">
     <h2>Request</h2>
     <form #tunnelRequestForm="ngForm" (ngSubmit)="onSubmit(tunnelRequestForm.form)">
