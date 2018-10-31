@@ -10,4 +10,10 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="valid_issuers.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

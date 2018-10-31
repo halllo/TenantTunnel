@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.IO;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,8 @@ namespace TenantTunnel.Auth
 
 		public static void Auth(this IServiceCollection services, IConfiguration config)
 		{
+			var validIssuers = File.ReadAllLines("./valid_issuers.txt").Select(i => i.Split('#')[0].Trim()).ToArray();
+
 			services.AddAuthentication(options =>
 			{
 				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -19,7 +23,7 @@ namespace TenantTunnel.Auth
 			{
 				options.Authority = $"https://login.microsoftonline.com/{config["AzureAd:DirectoryId"]}";
 				options.Audience = config["AzureAd:ApplicationId"];
-				options.TokenValidationParameters.ValidateIssuer = false;
+				options.TokenValidationParameters.ValidIssuers = validIssuers;
 			});
 
 			services.AddAuthorization(options =>

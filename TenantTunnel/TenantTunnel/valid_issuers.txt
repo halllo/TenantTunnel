@@ -1,0 +1,3 @@
+﻿# whitelisted issuers
+https://sts.windows.net/74a15b6f-bbcc-4e59-b372-6ec940a12bf3/ # STPAG2014.onmicrosoft.com
+https://sts.windows.net/0172414f-dfd2-41b2-8010-d26d6842f6fd/ # MSDN manuel.naujoks@stp-online.de
