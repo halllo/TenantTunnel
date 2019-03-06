@@ -10,6 +10,17 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
+  displayName: 'Prepare analysis on SonarCloud'
+  inputs:
+    SonarCloud: SonarCloud
+    organization: 'halllo-github'
+    projectKey: TenantTunnel
+    projectName: TenantTunnel
+    extraProperties: |
+     sonar.organization=halllo-github
+     sonar.branch.name=$(Build.SourceBranchName)
+
 - script: npm install
   workingDirectory: TenantTunnel/TenantTunnel.SPA
   displayName: 'Install SPA dependencies'
@@ -19,7 +30,20 @@ steps:
   displayName: 'Build SPA'
   
 - task: DotNetCoreCLI@2
-  displayName: 'Build & Publish Backend'
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish'
   inputs:
     command: publish
     publishWebProjects: false
@@ -27,13 +51,16 @@ steps:
     arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
 
+- task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@19
+  displayName: 'WhiteSource Bolt'
+  inputs:
+    cwd: TenantTunnel
+
+- task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
+  displayName: 'SonarCloud'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
 
-
-
-
-
-  
