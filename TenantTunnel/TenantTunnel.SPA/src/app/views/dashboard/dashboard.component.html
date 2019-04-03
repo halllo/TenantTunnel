@@ -29,6 +29,10 @@
         <label for="argument">argument</label>
         <input type="text" class="form-control" id="argument" required [(ngModel)]="argument" name="argument">
       </div>
+      <div class="form-group custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="subjectIsolation" [(ngModel)]="subjectIsolation" name="subjectIsolation">
+        <label class="custom-control-label" for="subjectIsolation">subject isolation</label>
+      </div>
       <button type="submit" class="btn btn-success" [disabled]="!tunnelRequestForm.form.valid || api.loading">request</button>
     
     </form>

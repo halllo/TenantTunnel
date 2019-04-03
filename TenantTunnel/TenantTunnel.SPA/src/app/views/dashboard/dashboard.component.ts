@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   endpoint: string;
   method: string;
   argument: string;
+  subjectIsolation: boolean;
   responses: Response[] = [];
 
   constructor(private auth: Auth, public api: Api) {
@@ -31,15 +32,15 @@ export class DashboardComponent implements OnInit {
 
   async onSubmit(form) {
     try {
-      const response = await this.api.requestThroughTunnel(this.endpoint, this.method, this.argument).toPromise();
+      const response = await this.api.requestThroughTunnel(this.endpoint, this.method, this.argument, this.subjectIsolation).toPromise();
       this.responses.push(<Response> {
-        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}?a=${this.argument}`,
+        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}?argument=${this.argument}` + (this.subjectIsolation ? '&isolation=subject' : ''),
         received: new Date(),
         body: response
       })
     } catch (err) {
       this.responses.push(<Response> {
-        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}?a=${this.argument}`,
+        url: environment.backend_api + `/api/tunnel/${this.endpoint}/${this.method}?argument=${this.argument}` + (this.subjectIsolation ? '&isolation=subject' : ''),
         received: new Date(),
         body: err,
         error: true
