@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using TenantTunnel;
 
-namespace OnPremiseAgent
+namespace OnPremiseAgent_Subject
 {
 	class Program
 	{
@@ -20,9 +20,10 @@ namespace OnPremiseAgent
 				Log("starting...", ConsoleColor.DarkGray);
 				var login = new AsyncLazy<AuthenticationResult>(() => AcquireAccessToken());
 
-				//LightAim.Url = "https://localhost:44379/hubs/tunnel";
+				LightAim.Url = "https://localhost:44379/hubs/tunnel";
 				var tunnelLight = await Light.For(
 					endpoint: endpoint,
+					subjectIsolation: true,
 					accessToken: async () => (await login).AccessToken,
 					closed: exception => Log(exception?.ToString() ?? "closed without exception", ConsoleColor.Red));
 
@@ -35,7 +36,7 @@ namespace OnPremiseAgent
 				}, responded: () => Log("sent"));
 
 				Log("started", ConsoleColor.DarkGray);
-				Log($"{endpoint}@{(await login).TenantId ?? (await login).Authority.Replace("https://login.windows.net/", "").Replace("/", "")}.{method}", ConsoleColor.Magenta);
+				Log($"{endpoint}@{(await login).UserInfo.UniqueId}@{(await login).TenantId ?? (await login).Authority.Replace("https://login.windows.net/", "").Replace("/", "")}.{method}", ConsoleColor.Magenta);
 
 				Console.ReadLine();
 

@@ -15,10 +15,10 @@ namespace TenantTunnel
 			this.handlers = new Dictionary<string, Tuple<Func<string, Task<string>>, Action>>();
 		}
 
-		public static async Task<Light> For(string endpoint, Func<Task<string>> accessToken = null, Action<Exception> closed = null)
+		public static async Task<Light> For(string endpoint, bool subjectIsolation = false, Func<Task<string>> accessToken = null, Action<Exception> closed = null)
 		{
 			var connection = new HubConnectionBuilder()
-				.WithUrl(LightAim.Url + "?endpoint=" + endpoint, opt =>
+				.WithUrl(LightAim.Url + "?endpoint=" + endpoint + (subjectIsolation ? "&isolation=subject" : ""), opt =>
 				{
 					if (accessToken != null)
 					{
@@ -32,7 +32,7 @@ namespace TenantTunnel
 			{
 				var method = message[0].ToString();
 				var correlationId = message[1].ToString();
-				var body = message[2].ToString();
+				var body = message[2]?.ToString();
 
 				if (tenantTunnelLight != null && tenantTunnelLight.handlers.ContainsKey(method))
 				{

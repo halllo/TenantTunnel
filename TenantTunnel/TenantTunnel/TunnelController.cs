@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,29 +21,28 @@ namespace TenantTunnel
 
 		[Route("api/tunnel/{endpoint}/{method}")]
 		[HttpGet]
-		public async Task<ActionResult> Get(string endpoint, string method)
+		public async Task<ActionResult> Get(string endpoint, string method, [FromQuery]string argument, [FromQuery]string isolation)
 		{
-			var query = HttpContext.Request.Query;
-			string argument = query[query.Keys.Single()].ToString();
-
-			return await Request(endpoint, method, argument);
+			return await Request(endpoint, method, argument, isolation);
 		}
 
 		[Route("api/tunnel/{endpoint}/{method}")]
 		[HttpPost]
-		public async Task<ActionResult> Post(string endpoint, string method)
+		public async Task<ActionResult> Post(string endpoint, string method, [FromQuery]string isolation)
 		{
 			var reader = new StreamReader(HttpContext.Request.Body);
 			var argument = reader.ReadToEnd();
 			reader.Dispose();
 
-			return await Request(endpoint, method, argument);
+			return await Request(endpoint, method, argument, isolation);
 		}
 
-		private async Task<ActionResult> Request(string endpoint, string method, string argument)
+		private async Task<ActionResult> Request(string endpoint, string method, string argument, string isolation)
 		{
 			var tenantId = this.HttpContext.User.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
-			var clients = await this.endpoints.Proxy(tenantId, endpoint);
+			var userId = isolation == "subject" ? this.HttpContext.User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value : null;
+
+			var clients = await this.endpoints.Proxy(tenantId, userId, endpoint);
 
 			var response = this.responseCorrelations.Response(out string correlationId);
 			var request = clients.SendAsync("Request", method, correlationId, argument);

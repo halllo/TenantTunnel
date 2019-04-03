@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TenantTunnel", "TenantTunnel\TenantTunnel.csproj", "{11194470-56AA-48CC-A6E9-3991F6C5B07A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TenantTunnel", "TenantTunnel\TenantTunnel.csproj", "{395BD5AC-2007-42D2-AE22-179395FBA9D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenantTunnelLight", "TenantTunnelLight\TenantTunnelLight.csproj", "{42830B12-89A1-43E8-9502-BCCCDB1367DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TenantTunnelLight", "TenantTunnelLight\TenantTunnelLight.csproj", "{42830B12-89A1-43E8-9502-BCCCDB1367DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnPremiseAgent", "OnPremiseAgent\OnPremiseAgent.csproj", "{C026D34F-5906-4BF4-B30C-D883A2FDCC15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnPremiseAgent_Tenant", "OnPremiseAgent_Tenant\OnPremiseAgent_Tenant.csproj", "{C026D34F-5906-4BF4-B30C-D883A2FDCC15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnPremiseAgent_Subject", "OnPremiseAgent_Subject\OnPremiseAgent_Subject.csproj", "{948FE5C7-923E-4AF4-8A4F-C8888D7160A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +17,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{11194470-56AA-48CC-A6E9-3991F6C5B07A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11194470-56AA-48CC-A6E9-3991F6C5B07A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11194470-56AA-48CC-A6E9-3991F6C5B07A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11194470-56AA-48CC-A6E9-3991F6C5B07A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{395BD5AC-2007-42D2-AE22-179395FBA9D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{395BD5AC-2007-42D2-AE22-179395FBA9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{395BD5AC-2007-42D2-AE22-179395FBA9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{395BD5AC-2007-42D2-AE22-179395FBA9D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42830B12-89A1-43E8-9502-BCCCDB1367DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{42830B12-89A1-43E8-9502-BCCCDB1367DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42830B12-89A1-43E8-9502-BCCCDB1367DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C026D34F-5906-4BF4-B30C-D883A2FDCC15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C026D34F-5906-4BF4-B30C-D883A2FDCC15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C026D34F-5906-4BF4-B30C-D883A2FDCC15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948FE5C7-923E-4AF4-8A4F-C8888D7160A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948FE5C7-923E-4AF4-8A4F-C8888D7160A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948FE5C7-923E-4AF4-8A4F-C8888D7160A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948FE5C7-923E-4AF4-8A4F-C8888D7160A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
