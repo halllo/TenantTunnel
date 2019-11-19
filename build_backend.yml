@@ -9,6 +9,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
+steps:
 - script: npm install
   workingDirectory: TenantTunnel/TenantTunnel.SPA
   displayName: 'Install SPA dependencies'
