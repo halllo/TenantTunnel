@@ -16,7 +16,7 @@ import { Auth } from './services/auth.service';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    NgbModule.forRoot(),
+    NgbModule,
   ],
   declarations: [
     AppComponent,
