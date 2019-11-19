@@ -9,18 +9,6 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-steps:
-- task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
-  displayName: 'Prepare analysis on SonarCloud'
-  inputs:
-    SonarCloud: SonarCloud
-    organization: 'halllo-github'
-    projectKey: TenantTunnel
-    projectName: TenantTunnel
-    extraProperties: |
-     sonar.organization=halllo-github
-     sonar.branch.name=$(Build.SourceBranchName)
-
 - script: npm install
   workingDirectory: TenantTunnel/TenantTunnel.SPA
   displayName: 'Install SPA dependencies'
@@ -50,14 +38,6 @@ steps:
     projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
     arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
-
-- task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@19
-  displayName: 'WhiteSource Bolt'
-  inputs:
-    cwd: TenantTunnel
-
-- task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
-  displayName: 'SonarCloud'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
