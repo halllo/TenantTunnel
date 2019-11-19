@@ -9,7 +9,7 @@ export const environment = {
   
   adalConfig: {
     tenant: 'common',
-    clientId: '8dc5acea-27b9-4a50-b731-3d23d4c1a63b' // application id
+    clientId: 'c1b96c7f-2776-43b1-9062-aa041298865a' // application id
   },
-  adalConfigApiEndpoint: '9ce9c8ac-4c70-42f6-8738-1183899d4960', // application id of backend
+  adalConfigApiEndpoint: '8afade94-3388-4016-a2d2-6ac272fcd54d', // application id of backend
 };

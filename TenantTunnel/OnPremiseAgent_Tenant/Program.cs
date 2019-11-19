@@ -54,7 +54,7 @@ namespace OnPremiseAgent_Tenant
 			var authority = ConfigurationManager.AppSettings["Authority"];
 			var clientID = ConfigurationManager.AppSettings["ClientID"];
 			var redirectUri = new Uri(ConfigurationManager.AppSettings["RedirectUri"]);
-			var resource = "9ce9c8ac-4c70-42f6-8738-1183899d4960";
+			var resource = "8afade94-3388-4016-a2d2-6ac272fcd54d";
 
 			Log("getting access token...");
 			var authenticationContext = new AuthenticationContext(authority, false);

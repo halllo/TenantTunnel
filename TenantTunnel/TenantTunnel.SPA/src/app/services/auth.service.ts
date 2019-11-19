@@ -38,6 +38,11 @@ export class Auth {
     this.context.login();
   }
 
+  public adminConsent() {
+    this.context.config.extraQueryParameter = 'prompt=admin_consent';
+    this.context.login();
+  }
+
   public logout() {
     this.context.logOut();
   }
