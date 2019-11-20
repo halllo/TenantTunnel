@@ -3,45 +3,69 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-pool:
-  vmImage: 'Ubuntu 16.04'
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    variables:
+      buildConfiguration: 'Release'
+    steps:
+    
+    - script: npm install
+      workingDirectory: TenantTunnel/TenantTunnel.SPA
+      displayName: 'Install SPA dependencies'
 
-variables:
-  buildConfiguration: 'Release'
+    - script: npm run build
+      workingDirectory: TenantTunnel/TenantTunnel.SPA
+      displayName: 'Build SPA'
+      
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
 
-steps:
-- script: npm install
-  workingDirectory: TenantTunnel/TenantTunnel.SPA
-  displayName: 'Install SPA dependencies'
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: build
+        projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
+        arguments: '--configuration $(BuildConfiguration)'
 
-- script: npm run build
-  workingDirectory: TenantTunnel/TenantTunnel.SPA
-  displayName: 'Build SPA'
-  
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
+        arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
+        zipAfterPublish: True
 
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
-    arguments: '--configuration $(BuildConfiguration)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish'
-  inputs:
-    command: publish
-    publishWebProjects: false
-    projects: TenantTunnel/TenantTunnel/TenantTunnel.csproj
-    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
-    zipAfterPublish: True
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
+- stage: Deploy
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    environment: 'dev'
+    strategy:
+      # default deployment strategy
+      runOnce:
+        deploy:
+          steps:
+
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Azure subscription 1(5774fdde-c7fd-440a-a12b-eeec67684502)'
+              appType: 'webApp'
+              WebAppName: 'tenanttunnel'
+              packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
 

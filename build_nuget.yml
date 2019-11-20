@@ -3,18 +3,42 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-pool:
-  vmImage: 'Ubuntu 16.04'
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    variables:
+      buildConfiguration: 'Release'
+    steps:
+    
+    - script: dotnet pack --output $(build.artifactstagingdirectory)
+      workingDirectory: TenantTunnel/TenantTunnelLight
+      displayName: 'Package'
 
-variables:
-  buildConfiguration: 'Release'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
 
-steps:
-- script: dotnet pack --output $(build.artifactstagingdirectory)
-  workingDirectory: TenantTunnel/TenantTunnelLight
-  displayName: 'Package'  
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
+- stage: Deploy
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    environment: 'dev'
+    strategy:
+      # default deployment strategy
+      runOnce:
+        deploy:
+          steps:
+
+          - task: NuGetCommand@2
+            inputs:
+              command: 'push'
+              packagesToPush: '$(Pipeline.Workspace)/**/*.nupkg'
+              nuGetFeedType: 'external'
+              publishFeedCredentials: 'nuget.org (TenantTunnel)'
+
